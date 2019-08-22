@@ -4,10 +4,8 @@ RUN groupadd -r bitcoin && useradd -r -m -g bitcoin bitcoin
 
 RUN set -ex \
 	&& apt-get update \
-	&& apt-get install -qq --no-install-recommends ca-certificates dirmngr gosu gpg python3 python3-pip python3-setuptools wget \
+	&& apt-get install -qq --no-install-recommends ca-certificates dirmngr gosu gpg wget \
 	&& rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install prometheus-client
 
 ENV BITCOIN_VERSION 0.18.0
 ENV BITCOIN_FILE bitcoin-0.18.0-x86_64-linux-gnu.tar.gz
@@ -36,10 +34,8 @@ RUN mkdir "$BITCOIN_DATA" \
 	&& chown -h bitcoin:bitcoin /home/bitcoin/.bitcoin
 VOLUME /data
 
-COPY scripts /scripts
-RUN chmod +x /scripts/*
 COPY docker-entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
-EXPOSE 8332 8333 8334 18332 18333 18443 18444
+EXPOSE 8332 8333 18332 18333 18443 18444
 CMD ["bitcoind"]
